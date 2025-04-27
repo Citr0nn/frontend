@@ -18,3 +18,5 @@ const BookCard = ({ book }) => {
     </div>
   );
 };
+
+export default BookCard;
