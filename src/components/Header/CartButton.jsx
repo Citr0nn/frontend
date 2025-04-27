@@ -8,7 +8,7 @@ const CartButton = () => {
   return (
     <Link to="/cart" className="cart-button">
       <span className="material-icons">shopping_cart</span>
-      <span>Корзина</span>
+      <span>Кошик</span>
       {cartItems > 0 && <span className="cart-counter">{cartItems}</span>}
     </Link>
   );

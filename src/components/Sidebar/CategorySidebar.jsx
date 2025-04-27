@@ -1,23 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getCategories } from '../../api/bookstoreApi';
 import './CategorySidebar.css';
 
 const CategorySidebar = () => {
   const navigate = useNavigate();
   
-  // Моковые данные для категорий
-  const categories = [
-    { id: 1, name: "Художественная литература" },
-    { id: 2, name: "Научная литература" },
-    { id: 3, name: "Детская литература" },
-    { id: 4, name: "Бизнес-литература" },
-    { id: 5, name: "Саморазвитие" },
-    { id: 6, name: "История" },
-    { id: 7, name: "Психология" },
-    { id: 8, name: "Философия" },
-    { id: 9, name: "Фантастика" },
-    { id: 10, name: "Детективы" }
-  ];
+  // Состояние для хранения категорий
+  const [categories, setCategories] = useState([]);
+  // Состояние для индикатора загрузки
+  const [loading, setLoading] = useState(true);
   
   // Состояние для выбранных категорий
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -27,6 +19,22 @@ const CategorySidebar = () => {
     min: 0,
     max: 1000
   });
+  
+  // Загрузка категорий при монтировании компонента
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Помилка завантаження категорій:", error);
+        setLoading(false);
+      }
+    };
+    
+    loadCategories();
+  }, []);
   
   // Обработчик изменения чекбокса категорий
   const handleCategoryChange = (categoryId) => {
@@ -64,32 +72,36 @@ const CategorySidebar = () => {
   
   return (
     <div className="category-sidebar">
-      <h3>Фильтры</h3>
+      <h3>Фільтри</h3>
       
       <div className="filter-section">
-        <h4>Категории книг</h4>
-        <ul className="categories-list">
-          {categories.map(category => (
-            <li key={category.id}>
-              <label className="category-checkbox">
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(category.id)}
-                  onChange={() => handleCategoryChange(category.id)}
-                />
-                <span>{category.name}</span>
-              </label>
-            </li>
-          ))}
-        </ul>
+        <h4>Категорії книг</h4>
+        {loading ? (
+          <p>Завантаження категорій...</p>
+        ) : (
+          <ul className="categories-list">
+            {categories.map(category => (
+              <li key={category.id}>
+                <label className="category-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(category.id)}
+                    onChange={() => handleCategoryChange(category.id)}
+                  />
+                  <span>{category.name}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       
       <div className="filter-section">
-        <h4>Цена</h4>
+        <h4>Ціна</h4>
         <div className="price-slider">
           <div className="price-inputs">
             <div>
-              <label htmlFor="min-price">От:</label>
+              <label htmlFor="min-price">Від:</label>
               <input
                 type="number"
                 id="min-price"
@@ -137,7 +149,7 @@ const CategorySidebar = () => {
       </div>
       
       <button className="apply-filters-btn" onClick={applyFilters}>
-        Применить фильтры
+        Застосувати фільтри
       </button>
     </div>
   );

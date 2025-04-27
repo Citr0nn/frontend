@@ -13,7 +13,7 @@ const Header = ({ onToggleSidebar }) => {
           onClick={onToggleSidebar}
         >
           <span className="material-icons">menu</span>
-          <span>Категории</span>
+          <span>Категорії</span>
         </button>
       </div>
       

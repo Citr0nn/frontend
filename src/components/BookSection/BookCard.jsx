@@ -11,10 +11,10 @@ const BookCard = ({ book }) => {
         <div className="book-info">
           <h3 className="book-title">{book.title}</h3>
           <p className="book-author">{book.author}</p>
-          <p className="book-price">{book.price} ₽</p>
+          <p className="book-price">{book.price} ₴</p>
         </div>
       </Link>
-      <button className="add-to-cart">В корзину</button>
+      <button className="add-to-cart">До кошика</button>
     </div>
   );
 };

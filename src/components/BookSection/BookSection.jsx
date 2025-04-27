@@ -8,7 +8,7 @@ const BookSection = ({ title, books }) => {
     <div className="book-section">
       <div className="section-header">
         <h2>{title}</h2>
-        <button className="view-all">Смотреть все</button>
+        <button className="view-all">Дивитися всі</button>
       </div>
       
       <HorizontalScroller>

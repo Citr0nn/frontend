@@ -6,14 +6,14 @@ const SearchBar = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     // Здесь будет логика поиска книг
-    console.log("Поиск по запросу:", searchQuery);
+    console.log("Пошук за запитом:", searchQuery);
   };
   
   return (
     <form className="search-bar" onSubmit={handleSearch}>
       <input
         type="text"
-        placeholder="Поиск книг..."
+        placeholder="Пошук книг..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
