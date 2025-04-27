@@ -25,12 +25,34 @@
   .filter-section h4 {
     margin-top: 0;
     margin-bottom: 10px;
+    font-weight: 600;
+    color: #333;
   }
   
   .categories-list {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .categories-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .categories-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .categories-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+  
+  .categories-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
   }
   
   .categories-list li {
@@ -41,6 +63,10 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+  }
+  
+  .category-checkbox:hover {
+    color: #3498db;
   }
   
   .category-checkbox input {

@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Импортируем axios
+import axios from 'axios';
 import './CategorySidebar.css';
 
 const CategorySidebar = () => {
   const navigate = useNavigate();
   
-  // Состояние для хранения категорий
+  // Состояние для хранения категорий и жанров
   const [categories, setCategories] = useState([]);
-  // Состояние для индикатора загрузки
-  const [loading, setLoading] = useState(true);
+  const [genres, setGenres] = useState([]);
+  // Состояние для индикаторов загрузки
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loadingGenres, setLoadingGenres] = useState(true);
   
-  // Состояние для выбранных категорий
+  // Состояние для выбранных фильтров
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
   
   // Состояние для диапазона цен
   const [priceRange, setPriceRange] = useState({
@@ -24,17 +27,34 @@ const CategorySidebar = () => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/categories/');
+        const response = await axios.get('http://localhost:8000/categories');
         const data = response.data;
         setCategories(data);
       } catch (error) {
         console.error("Помилка завантаження категорій:", error);
       } finally {
-        setLoading(false);
+        setLoadingCategories(false);
       }
     };
     
     loadCategories();
+  }, []);
+  
+  // Загрузка жанров при монтировании компонента
+  useEffect(() => {
+    const loadGenres = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/genres/');
+        const data = response.data;
+        setGenres(data);
+      } catch (error) {
+        console.error("Помилка завантаження жанрів:", error);
+      } finally {
+        setLoadingGenres(false);
+      }
+    };
+    
+    loadGenres();
   }, []);
   
   // Обработчик изменения чекбокса категорий
@@ -43,6 +63,15 @@ const CategorySidebar = () => {
       prevSelected.includes(categoryId)
         ? prevSelected.filter(id => id !== categoryId)
         : [...prevSelected, categoryId]
+    );
+  };
+  
+  // Обработчик изменения чекбокса жанров
+  const handleGenreChange = (genreId) => {
+    setSelectedGenres(prevSelected =>
+      prevSelected.includes(genreId)
+        ? prevSelected.filter(id => id !== genreId)
+        : [...prevSelected, genreId]
     );
   };
   
@@ -63,6 +92,10 @@ const CategorySidebar = () => {
       queryParams.set('categories', selectedCategories.join(','));
     }
     
+    if (selectedGenres.length > 0) {
+      queryParams.set('genres', selectedGenres.join(','));
+    }
+    
     queryParams.set('minPrice', priceRange.min);
     queryParams.set('maxPrice', priceRange.max);
     
@@ -75,7 +108,7 @@ const CategorySidebar = () => {
       
       <div className="filter-section">
         <h4>Категорії книг</h4>
-        {loading ? (
+        {loadingCategories ? (
           <p>Завантаження категорій...</p>
         ) : (
           <ul className="categories-list">
@@ -88,6 +121,28 @@ const CategorySidebar = () => {
                     onChange={() => handleCategoryChange(category.id)}
                   />
                   <span>{category.name}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      
+      <div className="filter-section">
+        <h4>Жанри</h4>
+        {loadingGenres ? (
+          <p>Завантаження жанрів...</p>
+        ) : (
+          <ul className="categories-list">
+            {genres.map(genre => (
+              <li key={genre.id}>
+                <label className="category-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedGenres.includes(genre.id)}
+                    onChange={() => handleGenreChange(genre.id)}
+                  />
+                  <span>{genre.name}</span>
                 </label>
               </li>
             ))}
