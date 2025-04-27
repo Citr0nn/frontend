@@ -119,11 +119,11 @@ const CategorySidebar = () => {
   }, []);
 
   // Обработчик изменения чекбокса категорий
-  const handleCategoryChange = (categoryId) => {
+  const handleCategoryChange = (categoryName) => {
     setSelectedCategories(prevSelected =>
-      prevSelected.includes(categoryId)
-        ? prevSelected.filter(id => id !== categoryId)
-        : [...prevSelected, categoryId]
+      prevSelected.includes(categoryName)
+        ? prevSelected.filter(id => id !== categoryName)
+        : [...prevSelected, categoryName]
     );
   };
   
@@ -175,25 +175,30 @@ const CategorySidebar = () => {
   // Применение фильтров
   const applyFilters = () => {
     const queryParams = new URLSearchParams();
-    
+  
     if (selectedCategories.length > 0) {
-      queryParams.set('categories', selectedCategories.join(','));
+      const formattedCategories = selectedCategories.map(name => `"${name}"`).join(',');
+      queryParams.set('categories', formattedCategories);
     }
-    
+  
     if (selectedGenres.length > 0) {
-      queryParams.set('genres', selectedGenres.join(','));
+      const formattedGenres = selectedGenres.map(name => `"${name}"`).join(',');
+      queryParams.set('genres', formattedGenres);
     }
-
+  
     if (selectedLanguages.length > 0) {
-        queryParams.set('languages', selectedLanguages.join(','));
+      const formattedLanguages = selectedLanguages.map(name => `"${name}"`).join(',');
+      queryParams.set('languages', formattedLanguages);
     }
-
+  
     if (selectedPublishers.length > 0) {
-        queryParams.set('publishers', selectedPublishers.join(','));
+      const formattedPublishers = selectedPublishers.map(name => `"${name}"`).join(',');
+      queryParams.set('publishers', formattedPublishers);
     }
-    
+  
     if (selectedAuthors.length > 0) {
-        queryParams.set('authors', selectedAuthors.join(','));
+      const formattedAuthors = selectedAuthors.map(name => `"${name}"`).join(',');
+      queryParams.set('authors', formattedAuthors);
     }
     
     queryParams.set('minPrice', priceRange.min);
@@ -213,12 +218,12 @@ const CategorySidebar = () => {
         ) : (
           <ul className="categories-list">
             {categories.map(category => (
-              <li key={category.id}>
+              <li key={category.name}>
                 <label className="category-checkbox">
                   <input
                     type="checkbox"
-                    checked={selectedCategories.includes(category.id)}
-                    onChange={() => handleCategoryChange(category.id)}
+                    checked={selectedCategories.includes(category.name)}
+                    onChange={() => handleCategoryChange(category.name)}
                   />
                   <span>{category.name}</span>
                 </label>
