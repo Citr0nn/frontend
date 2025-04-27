@@ -101,3 +101,65 @@
   .toggle-button:hover {
     text-decoration: underline;
   }
+  
+  /* Новые стили для социальной авторизации */
+  .social-login {
+    margin-top: 20px;
+  }
+  
+  .or-divider {
+    position: relative;
+    text-align: center;
+    margin: 15px 0;
+    color: #888;
+  }
+  
+  .or-divider::before,
+  .or-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ddd;
+  }
+  
+  .or-divider::before {
+    left: 0;
+  }
+  
+  .or-divider::after {
+    right: 0;
+  }
+  
+  .google-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .google-login-btn:hover {
+    background-color: #f7f7f7;
+  }
+  
+  .google-icon {
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #4285F4;
+  }
+  
+  /* Стили для сообщений об ошибках */
+  .error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 5px;
+  }

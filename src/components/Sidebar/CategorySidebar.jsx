@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCategories } from '../../api/bookstoreApi';
+import axios from 'axios'; // Импортируем axios
 import './CategorySidebar.css';
 
 const CategorySidebar = () => {
@@ -24,11 +24,12 @@ const CategorySidebar = () => {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const data = await getCategories();
+        const response = await axios.get('http://localhost:8000/categories/');
+        const data = response.data;
         setCategories(data);
-        setLoading(false);
       } catch (error) {
         console.error("Помилка завантаження категорій:", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -38,25 +39,24 @@ const CategorySidebar = () => {
   
   // Обработчик изменения чекбокса категорий
   const handleCategoryChange = (categoryId) => {
-    if (selectedCategories.includes(categoryId)) {
-      setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
-    } else {
-      setSelectedCategories([...selectedCategories, categoryId]);
-    }
+    setSelectedCategories(prevSelected =>
+      prevSelected.includes(categoryId)
+        ? prevSelected.filter(id => id !== categoryId)
+        : [...prevSelected, categoryId]
+    );
   };
   
   // Обработчик изменения диапазона цен
   const handlePriceChange = (e) => {
     const { name, value } = e.target;
-    setPriceRange({
-      ...priceRange,
-      [name]: parseInt(value)
-    });
+    setPriceRange(prevRange => ({
+      ...prevRange,
+      [name]: parseInt(value, 10) || 0
+    }));
   };
   
   // Применение фильтров
   const applyFilters = () => {
-    // Формирование URL с параметрами
     const queryParams = new URLSearchParams();
     
     if (selectedCategories.length > 0) {
@@ -66,7 +66,6 @@ const CategorySidebar = () => {
     queryParams.set('minPrice', priceRange.min);
     queryParams.set('maxPrice', priceRange.max);
     
-    // Перенаправление на страницу с фильтрами
     navigate(`/search?${queryParams.toString()}`);
   };
   
@@ -129,7 +128,7 @@ const CategorySidebar = () => {
             <input
               type="range"
               min="0"
-              max="10000"
+              max="1000"
               value={priceRange.min}
               name="min"
               onChange={handlePriceChange}
