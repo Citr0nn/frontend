@@ -9,13 +9,23 @@ const CategorySidebar = () => {
   // Состояние для хранения категорий и жанров
   const [categories, setCategories] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [languages, setLanguages] = useState([]);
+  const [publishers, setPublishers] = useState([]);
+  const [authors, setAuthors] = useState([]);
+
   // Состояние для индикаторов загрузки
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingGenres, setLoadingGenres] = useState(true);
+  const [loadingLanguages, setLoadingLanguages] = useState(true);
+  const [loadingPublishers, setLoadingPublishers] = useState(true);
+  const [loadingAuthors, setLoadingAuthors] = useState(true);
   
   // Состояние для выбранных фильтров
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedPublishers, setSelectedPublishers] = useState([]);
+  const [selectedAuthors, setSelectedAuthors] = useState([]);
   
   // Состояние для диапазона цен
   const [priceRange, setPriceRange] = useState({
@@ -56,7 +66,58 @@ const CategorySidebar = () => {
     
     loadGenres();
   }, []);
+
+//мови
+  useEffect(() => {
+    const loadLanguages = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/languages');
+        const data = response.data;
+        setLanguages(data);
+      } catch (error) {
+        console.error("Помилка завантаження мов:", error);
+      } finally {
+        setLoadingLanguages(false);
+      }
+    };
+    
+    loadLanguages();
+  }, []);
   
+  //издательства
+  useEffect(() => {
+    const loadPublishers = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/publishers');
+        const data = response.data.authors;
+        setPublishers(data);
+      } catch (error) {
+        console.error("Помилка завантаження видавництв:", error);
+      } finally {
+        setLoadingPublishers(false);
+      }
+    };
+    
+    loadPublishers();
+  }, []);
+
+  //авторы
+  useEffect(() => {
+    const loadAuthors = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/authors');
+        const data = response.data.authors;
+        setAuthors(data);
+      } catch (error) {
+        console.error("Помилка завантаження авторів:", error);
+      } finally {
+        setLoadingAuthors(false);
+      }
+    };
+    
+    loadAuthors();
+  }, []);
+
   // Обработчик изменения чекбокса категорий
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories(prevSelected =>
@@ -72,6 +133,33 @@ const CategorySidebar = () => {
       prevSelected.includes(genreId)
         ? prevSelected.filter(id => id !== genreId)
         : [...prevSelected, genreId]
+    );
+  };
+
+  // Обработчик изменения чекбокса языков
+  const handleLanguagesChange = (languageId) => {
+    setSelectedLanguages(prevSelected =>
+      prevSelected.includes(languageId)
+        ? prevSelected.filter(id => id !== languageId)
+        : [...prevSelected, languageId]
+    );
+  };
+
+  // Обработчик изменения чекбокса издателей
+  const handlePublishersChange = (publisherId) => {
+    setSelectedPublishers(prevSelected =>
+      prevSelected.includes(publisherId)
+        ? prevSelected.filter(id => id !== publisherId)
+        : [...prevSelected, publisherId]
+    );
+  };
+
+  // Обработчик изменения чекбокса издателей
+  const handleAuthorsChange = (authorId) => {
+    setSelectedAuthors(prevSelected =>
+      prevSelected.includes(authorId)
+        ? prevSelected.filter(id => id !== authorId)
+        : [...prevSelected, authorId]
     );
   };
   
@@ -94,6 +182,18 @@ const CategorySidebar = () => {
     
     if (selectedGenres.length > 0) {
       queryParams.set('genres', selectedGenres.join(','));
+    }
+
+    if (selectedLanguages.length > 0) {
+        queryParams.set('languages', selectedLanguages.join(','));
+    }
+
+    if (selectedPublishers.length > 0) {
+        queryParams.set('publishers', selectedPublishers.join(','));
+    }
+    
+    if (selectedAuthors.length > 0) {
+        queryParams.set('authors', selectedAuthors.join(','));
     }
     
     queryParams.set('minPrice', priceRange.min);
@@ -143,6 +243,72 @@ const CategorySidebar = () => {
                     onChange={() => handleGenreChange(genre.id)}
                   />
                   <span>{genre.name}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="filter-section">
+        <h4>Мови</h4>
+        {loadingLanguages ? (
+          <p>Завантаження мов...</p>
+        ) : (
+          <ul className="categories-list">
+            {languages.map(languages => (
+              <li key={languages.id}>
+                <label className="category-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedLanguages.includes(languages.id)}
+                    onChange={() => handleLanguagesChange(languages.id)}
+                  />
+                  <span>{languages.name}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="filter-section">
+        <h4>Видавництва</h4>
+        {loadingPublishers ? (
+          <p>Завантаження видавництв...</p>
+        ) : (
+          <ul className="categories-list">
+            {publishers.map(publishers => (
+              <li key={publishers.id}>
+                <label className="category-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedPublishers.includes(publishers.id)}
+                    onChange={() => handlePublishersChange(publishers.id)}
+                  />
+                  <span>{publishers.name}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="filter-section">
+        <h4>Автори</h4>
+        {loadingAuthors ? (
+          <p>Завантаження авторів...</p>
+        ) : (
+          <ul className="categories-list">
+            {authors.map(authors => (
+              <li key={authors.id}>
+                <label className="category-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedAuthors.includes(authors.id)}
+                    onChange={() => handleAuthorsChange(authors.id)}
+                  />
+                  <span>{authors.fullName}</span>
                 </label>
               </li>
             ))}
