@@ -108,10 +108,22 @@
     font-size: 14px;
   }
   
+  .book-price-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .book-original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 14px;
+  }
+  
   .book-price {
     margin: 0;
     font-weight: 600;
-    color: #3498db;
+    color: #e74c3c;
   }
   
   .add-to-cart {

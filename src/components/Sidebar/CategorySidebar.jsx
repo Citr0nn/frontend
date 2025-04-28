@@ -240,12 +240,12 @@ const CategorySidebar = () => {
         ) : (
           <ul className="categories-list">
             {genres.map(genre => (
-              <li key={genre.id}>
+              <li key={genre.name}>
                 <label className="category-checkbox">
                   <input
                     type="checkbox"
-                    checked={selectedGenres.includes(genre.id)}
-                    onChange={() => handleGenreChange(genre.id)}
+                    checked={selectedGenres.includes(genre.name)}
+                    onChange={() => handleGenreChange(genre.name)}
                   />
                   <span>{genre.name}</span>
                 </label>
@@ -262,12 +262,12 @@ const CategorySidebar = () => {
         ) : (
           <ul className="categories-list">
             {languages.map(languages => (
-              <li key={languages.id}>
+              <li key={languages.name}>
                 <label className="category-checkbox">
                   <input
                     type="checkbox"
-                    checked={selectedLanguages.includes(languages.id)}
-                    onChange={() => handleLanguagesChange(languages.id)}
+                    checked={selectedLanguages.includes(languages.name)}
+                    onChange={() => handleLanguagesChange(languages.name)}
                   />
                   <span>{languages.name}</span>
                 </label>
@@ -284,12 +284,12 @@ const CategorySidebar = () => {
         ) : (
           <ul className="categories-list">
             {publishers.map(publishers => (
-              <li key={publishers.id}>
+              <li key={publishers.name}>
                 <label className="category-checkbox">
                   <input
                     type="checkbox"
-                    checked={selectedPublishers.includes(publishers.id)}
-                    onChange={() => handlePublishersChange(publishers.id)}
+                    checked={selectedPublishers.includes(publishers.name)}
+                    onChange={() => handlePublishersChange(publishers.name)}
                   />
                   <span>{publishers.name}</span>
                 </label>
@@ -306,12 +306,12 @@ const CategorySidebar = () => {
         ) : (
           <ul className="categories-list">
             {authors.map(authors => (
-              <li key={authors.id}>
+              <li key={authors.name}>
                 <label className="category-checkbox">
                   <input
                     type="checkbox"
-                    checked={selectedAuthors.includes(authors.id)}
-                    onChange={() => handleAuthorsChange(authors.id)}
+                    checked={selectedAuthors.includes(authors.name)}
+                    onChange={() => handleAuthorsChange(authors.name)}
                   />
                   <span>{authors.fullName}</span>
                 </label>
