@@ -27,7 +27,7 @@ export const getBookSections = async () => {
           id: item.book.id,
           title: item.book.title,
           author: item.book.authors && item.book.authors.length > 0 
-            ? item.book.authors.map(author => author.name).join(', ') 
+            ? item.book.authors.map(author => author.fullName).join(', ') 
             : 'Автор не вказаний',
           price: item.book.discountedPrice && parseFloat(item.book.discountedPrice) > 0 
             ? parseFloat(item.book.discountedPrice) 
@@ -45,7 +45,7 @@ export const getBookSections = async () => {
           id: item.book.id,
           title: item.book.title,
           author: item.book.authors && item.book.authors.length > 0 
-            ? item.book.authors.map(author => author.name).join(', ') 
+            ? item.book.authors.map(author => author.fullName).join(', ') 
             : 'Автор не вказаний',
           price: parseFloat(item.book.discountedPrice),
           originalPrice: parseFloat(item.book.originalPrice),
@@ -61,7 +61,7 @@ export const getBookSections = async () => {
           id: item.book.id,
           title: item.book.title,
           author: item.book.authors && item.book.authors.length > 0 
-            ? item.book.authors.map(author => author.name).join(', ') 
+            ? item.book.authors.map(author => author.fullName).join(', ') 
             : 'Автор не вказаний',
           price: item.book.discountedPrice && parseFloat(item.book.discountedPrice) > 0 
             ? parseFloat(item.book.discountedPrice) 
@@ -87,7 +87,7 @@ export const getBooksByCategory = async (categoryId) => {
       id: item.book.id,
       title: item.book.title,
       author: item.book.authors && item.book.authors.length > 0 
-        ? item.book.authors.map(author => author.name).join(', ') 
+        ? item.book.authors.map(author => author.fullName).join(', ') 
         : 'Автор не вказаний',
       price: item.book.discountedPrice && parseFloat(item.book.discountedPrice) > 0 
         ? parseFloat(item.book.discountedPrice) 

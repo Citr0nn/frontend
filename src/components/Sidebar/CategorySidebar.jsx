@@ -306,12 +306,12 @@ const CategorySidebar = () => {
         ) : (
           <ul className="categories-list">
             {authors.map(authors => (
-              <li key={authors.name}>
+              <li key={authors.fullName}>
                 <label className="category-checkbox">
                   <input
                     type="checkbox"
-                    checked={selectedAuthors.includes(authors.name)}
-                    onChange={() => handleAuthorsChange(authors.name)}
+                    checked={selectedAuthors.includes(authors.fullName)}
+                    onChange={() => handleAuthorsChange(authors.fullName)}
                   />
                   <span>{authors.fullName}</span>
                 </label>
