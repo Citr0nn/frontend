@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AuthModal.css';
 
 const AuthModal = ({ isOpen, onClose }) => {
@@ -10,8 +10,68 @@ const AuthModal = ({ isOpen, onClose }) => {
     name: ''
   });
   
-  // Состояние для ошибок валидации
   const [errors, setErrors] = useState({});
+  const [refreshTimer, setRefreshTimer] = useState(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const token = localStorage.getItem('token');
+    const expiration = localStorage.getItem('tokenExpiration');
+
+    if (token && expiration) {
+      setupAutoRefresh(expiration);
+    }
+
+    return () => {
+      if (refreshTimer) {
+        clearTimeout(refreshTimer);
+      }
+    };
+  }, [isOpen]);
+
+  const setupAutoRefresh = (expirationTime) => {
+    const now = Date.now();
+    const timeLeft = Number(expirationTime) - now;
+
+    if (timeLeft <= 0) {
+      refreshToken();
+      return;
+    }
+
+    const refreshTime = timeLeft - 5 * 60 * 1000; // За 5 минут до окончания
+
+    const timer = setTimeout(() => {
+      refreshToken();
+    }, refreshTime > 0 ? refreshTime : 0);
+
+    setRefreshTimer(timer);
+  };
+
+  const refreshToken = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/refresh', {
+        method: 'POST',
+        credentials: 'include', // важно если refresh через куки
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Не удалось обновить токен');
+      }
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('tokenExpiration', Date.now() + data.tokenExpiration);
+
+      setupAutoRefresh(Date.now() + data.tokenExpiration);
+    } catch (error) {
+      console.error('Ошибка обновления токена:', error.message);
+      localStorage.removeItem('token');
+      localStorage.removeItem('tokenExpiration');
+      onClose(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +80,6 @@ const AuthModal = ({ isOpen, onClose }) => {
       [name]: value
     });
     
-    // Очистка ошибки для поля при изменении значения
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -32,21 +91,18 @@ const AuthModal = ({ isOpen, onClose }) => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Базовая валидация email
     if (!formData.email) {
       newErrors.email = "Електронна пошта обов'язкова";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Невірний формат електронної пошти";
     }
     
-    // Валидация пароля
     if (!formData.password) {
       newErrors.password = "Пароль обов'язковий";
     } else if (formData.password.length < 6) {
       newErrors.password = "Пароль має містити мінімум 6 символів";
     }
     
-    // Валидация подтверждения пароля при регистрации
     if (!isLogin) {
       if (!formData.name) {
         newErrors.name = "Ім'я обов'язкове";
@@ -104,6 +160,11 @@ const AuthModal = ({ isOpen, onClose }) => {
       if (isLogin) {
         console.log('Успішний вхід', data);
         localStorage.setItem('token', data.user.token);
+        
+        // сохраняем время окончания токена
+        const expirationTime = Date.now() + data.user.tokenExpiration; 
+        localStorage.setItem('tokenExpiration', expirationTime.toString());
+      
         onClose(true);
       } else {
         console.log('Успішна реєстрація', data.message);
@@ -116,15 +177,12 @@ const AuthModal = ({ isOpen, onClose }) => {
     }
   };
   
-  
   const handleGoogleLogin = () => {
     window.location.href = 'http://localhost:8000/users/google';
   };
-  
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
-    // Сбросить форму и ошибки при переключении
     setFormData({
       email: '',
       password: '',

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import BookDetailsPage from './pages/BookDetailsPage';
@@ -8,27 +8,43 @@ import CheckoutPage from './pages/CheckoutPage';
 import './App.css';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const expiration = localStorage.getItem('tokenExpiration');
 
     if (token && expiration) {
-      const now = new Date().getTime();
-      if (now > Number(expiration)) {
-        // Если токен истёк — удаляем его
-        localStorage.removeItem('token');
-        localStorage.removeItem('tokenExpiration');
-        console.log('Токен истёк. Пользователь разлогинен.');
+      const now = Date.now();
+      if (now < Number(expiration)) {
+        setIsAuthenticated(true);
+
+        // Автоматический выход через timeout
+        const timeout = Number(expiration) - now;
+        const timer = setTimeout(() => {
+          logout();
+        }, timeout);
+
+        return () => clearTimeout(timer);
       } else {
-        console.log('Пользователь авторизован.');
+        logout();
       }
     }
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('tokenExpiration');
+    setIsAuthenticated(false);
+    console.log('Токен истёк. Пользователь разлогинен.');
+  };
+
   return (
     <Router>
       <div className="app">
+        {/* Для теста покажем статус */}
+        
+
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/book/:id" element={<BookDetailsPage />} />
