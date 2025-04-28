@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthModal from '../Auth/AuthModal';
 
 const AuthButton = () => {
@@ -7,18 +7,8 @@ const AuthButton = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const expiration = localStorage.getItem('tokenExpiration');
-
-    if (token && expiration) {
-      const now = Date.now();
-      if (now < Number(expiration)) {
-        setIsLoggedIn(true);
-      } else {
-        // Токен истек
-        localStorage.removeItem('token');
-        localStorage.removeItem('tokenExpiration');
-        setIsLoggedIn(false);
-      }
+    if (token) {
+      setIsLoggedIn(true);
     }
   }, []);
 
@@ -33,15 +23,14 @@ const AuthButton = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('tokenExpiration');
     setIsLoggedIn(false);
-    window.location.reload();
   };
 
   return (
     <div className="auth-button">
       {isLoggedIn ? (
-        <div className="user-menu" onClick={handleLogout} style={{ cursor: 'pointer' }}>
+        <div className="user-menu" onClick={handleLogout}>
           <span className="material-icons">account_circle</span>
-          <span>Вийти з профілю</span>
+          <span>Мій профіль (Вийти)</span>
         </div>
       ) : (
         <button className="login-button" onClick={() => setIsModalOpen(true)}>
