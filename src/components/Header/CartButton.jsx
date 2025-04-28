@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const CartButton = () => {
-  // В реальном приложении данные корзины будут получаться из CartContext
-  const cartItems = 0;
-  
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    // Получаем товары из localStorage при загрузке компонента
+    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCartItems(savedCart);
+  }, []);
+
   return (
-    <Link to="/cart" className="cart-button">
+    <Link to="#" className="cart-button" onClick={() => setCartItems(JSON.parse(localStorage.getItem('cart')) || [])}>
       <span className="material-icons">shopping_cart</span>
       <span>Кошик</span>
-      {cartItems > 0 && <span className="cart-counter">{cartItems}</span>}
+      {cartItems.length > 0 && <span className="cart-counter">{cartItems.length}</span>}
     </Link>
   );
 };

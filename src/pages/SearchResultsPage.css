@@ -1,0 +1,55 @@
+/* Стили для страницы с результатами */
+.search-results-page {
+  padding: 0px;
+}
+
+.result{
+  padding: 20px;
+}
+
+/* Стиль для списка книг */
+.books-list {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 0px; /* Отступ для того, чтобы книги не перекрывались хедером */
+}
+
+/* Стиль для отдельной книги */
+.book-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.book-item .book-image {
+  flex-shrink: 0; /* Чтобы изображение не сжималось */
+  width: 150px;
+  height: 200px;
+}
+
+.book-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.book-item .book-info {
+  flex-grow: 1;
+}
+
+.book-item h3 {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.book-item p {
+  font-size: 14px;
+  color: #555;
+}

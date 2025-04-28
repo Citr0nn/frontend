@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const BookCard = ({ book }) => {
   return (
     <div className="book-card">
-      <Link to={`/book/${book.id}`}>
+      <Link to={`http://localhost:8000/books/${book.id}`}>
         <div className="book-cover">
           <img src={book.imageUrl} alt={book.title} />
         </div>

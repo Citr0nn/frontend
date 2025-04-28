@@ -5,6 +5,7 @@ import BookDetailsPage from './pages/BookDetailsPage';
 import CategoryPage from './pages/CategoryPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
+import SearchResultsPage from './pages/SearchResultsPage';  // Импортируем новую страницу результатов
 import './App.css';
 import ConfirmGoogle from './pages/ConfirmGoogle';
 
@@ -45,14 +46,14 @@ function App() {
       <div className="app">
         {/* Для теста покажем статус */}
         
-
         <Routes>
-        <Route path="/users/confirm-google-email" element={<ConfirmGoogle />} />
+          <Route path="/users/confirm-google-email" element={<ConfirmGoogle />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/book/:id" element={<BookDetailsPage />} />
           <Route path="/category/:id" element={<CategoryPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/search-results" element={<SearchResultsPage />} /> {/* Новый маршрут для результатов поиска */}
         </Routes>
       </div>
     </Router>
