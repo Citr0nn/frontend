@@ -6,6 +6,7 @@ import CategoryPage from './pages/CategoryPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import './App.css';
+import ConfirmGoogle from './pages/ConfirmGoogle';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -46,6 +47,7 @@ function App() {
         
 
         <Routes>
+        <Route path="/users/confirm-google-email" element={<ConfirmGoogle />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/book/:id" element={<BookDetailsPage />} />
           <Route path="/category/:id" element={<CategoryPage />} />
