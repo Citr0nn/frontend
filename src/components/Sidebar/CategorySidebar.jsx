@@ -177,35 +177,32 @@ const CategorySidebar = () => {
     const queryParams = new URLSearchParams();
   
     if (selectedCategories.length > 0) {
-      const formattedCategories = selectedCategories.map(name => `"${name}"`).join(',');
-      queryParams.set('categories', formattedCategories);
+      queryParams.set('categories', selectedCategories.join(','));
     }
   
     if (selectedGenres.length > 0) {
-      const formattedGenres = selectedGenres.map(name => `"${name}"`).join(',');
-      queryParams.set('genres', formattedGenres);
+      queryParams.set('genres', selectedGenres.join(','));
     }
   
     if (selectedLanguages.length > 0) {
-      const formattedLanguages = selectedLanguages.map(name => `"${name}"`).join(',');
-      queryParams.set('languages', formattedLanguages);
+      queryParams.set('languages', selectedLanguages.join(','));
     }
   
     if (selectedPublishers.length > 0) {
-      const formattedPublishers = selectedPublishers.map(name => `"${name}"`).join(',');
-      queryParams.set('publishers', formattedPublishers);
+      queryParams.set('publishers', selectedPublishers.join(','));
     }
   
     if (selectedAuthors.length > 0) {
-      const formattedAuthors = selectedAuthors.map(name => `"${name}"`).join(',');
-      queryParams.set('authors', formattedAuthors);
+      queryParams.set('authors', selectedAuthors.join(','));
     }
-    
-    queryParams.set('minPrice', priceRange.min);
-    queryParams.set('maxPrice', priceRange.max);
-    
-    navigate(`/search?${queryParams.toString()}`);
+  
+    // Вместо двух параметров minPrice и maxPrice делаем один price
+    queryParams.set('price', `${priceRange.min}-${priceRange.max}`);
+  
+    // Навигация на новый путь
+    navigate(`/books/search?${queryParams.toString()}`);
   };
+  
   
   return (
     <div className="category-sidebar">
