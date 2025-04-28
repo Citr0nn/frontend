@@ -63,39 +63,64 @@ const AuthModal = ({ isOpen, onClose }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
       return;
     }
-    
-    // Здесь будет логика авторизации/регистрации
-    console.log('Form submitted:', formData);
-    
-    // Имитация запроса к реальной базе данных
-    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-    
-    // В реальном приложении здесь будет fetch/axios запрос
-    console.log(`Отправка данных на ${endpoint}`, formData);
-    
-    // Имитация успешного входа
-    onClose(true);
+  
+    try {
+      const url = isLogin
+        ? 'http://localhost:8000/users/login'
+        : 'http://localhost:8000/users/register';
+  
+      const payload = isLogin
+        ? {
+            email: formData.email,
+            password: formData.password
+          }
+        : {
+            username: formData.name,
+            email: formData.email,
+            password: formData.password,
+            confirmedPassword: formData.confirmPassword
+          };
+  
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Щось пішло не так');
+      }
+  
+      if (isLogin) {
+        console.log('Успішний вхід', data);
+        localStorage.setItem('token', data.user.token);
+        onClose(true);
+      } else {
+        console.log('Успішна реєстрація', data.message);
+        alert('Реєстрація успішна! Перевірте пошту для підтвердження.');
+        setIsLogin(true);
+      }
+    } catch (error) {
+      console.error('Помилка:', error.message);
+      alert(error.message);
+    }
   };
   
+  
   const handleGoogleLogin = () => {
-    // В реальном приложении здесь будет перенаправление на OAuth Google
-    console.log('Login with Google requested');
-    
-    // Имитация запроса к реальной базе данных для Google OAuth
-    console.log('Redirecting to Google OAuth endpoint...');
-    
-    // Пример, как это может выглядеть:
-    // window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`;
-    
-    // Имитация успешного входа через Google
-    setTimeout(() => onClose(true), 1000);
+    window.location.href = 'http://localhost:8000/users/google';
   };
+  
 
   const toggleForm = () => {
     setIsLogin(!isLogin);

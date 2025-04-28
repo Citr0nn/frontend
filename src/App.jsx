@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import BookDetailsPage from './pages/BookDetailsPage';
@@ -7,11 +7,25 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import './App.css';
 
-// Импорт шрифта Material Icons для иконок
-// В реальном проекте добавьте в index.html:
-// <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
 function App() {
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const expiration = localStorage.getItem('tokenExpiration');
+
+    if (token && expiration) {
+      const now = new Date().getTime();
+      if (now > Number(expiration)) {
+        // Если токен истёк — удаляем его
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenExpiration');
+        console.log('Токен истёк. Пользователь разлогинен.');
+      } else {
+        console.log('Пользователь авторизован.');
+      }
+    }
+  }, []);
+
   return (
     <Router>
       <div className="app">

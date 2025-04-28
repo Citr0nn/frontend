@@ -8,16 +8,16 @@ const SearchBar = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`http://localhost:3000/search`, {
-        params: { text: searchQuery }  // <-- правильная передача параметра
+      const response = await axios.get(`http://localhost:8000/books/search`, {
+        params: { text: searchQuery }
       });
       console.log("Результаты поиска:", response.data);
-      setResults(response.data);  // сохраняем полученные данные
+      setResults(response.data);
     } catch (error) {
       console.error("Ошибка поиска:", error);
     }
   };
-  
+
   return (
     <>
       <form className="search-bar" onSubmit={handleSearch}>
@@ -32,7 +32,6 @@ const SearchBar = () => {
         </button>
       </form>
 
-      {/* Отображение результатов поиска */}
       <div className="search-results">
         {results.map((book) => (
           <div key={book.id}>
