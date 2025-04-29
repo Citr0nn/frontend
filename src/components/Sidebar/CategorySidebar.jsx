@@ -173,35 +173,47 @@ const CategorySidebar = () => {
   };
   
   // Применение фильтров
-  const applyFilters = () => {
-    const queryParams = new URLSearchParams();
-  
-    if (selectedCategories.length > 0) {
-      queryParams.set('categories', selectedCategories.join(','));
-    }
-  
-    if (selectedGenres.length > 0) {
-      queryParams.set('genres', selectedGenres.join(','));
-    }
-  
-    if (selectedLanguages.length > 0) {
-      queryParams.set('languages', selectedLanguages.join(','));
-    }
-  
-    if (selectedPublishers.length > 0) {
-      queryParams.set('publishers', selectedPublishers.join(','));
-    }
-  
-    if (selectedAuthors.length > 0) {
-      queryParams.set('authors', selectedAuthors.join(','));
-    }
-  
-    // Вместо двух параметров minPrice и maxPrice делаем один price
-    queryParams.set('price', `${priceRange.min}-${priceRange.max}`);
-  
-    // Навигация на новый путь
-    navigate(`/books/search?${queryParams.toString()}`);
-  };
+  const applyFilters = async () => {
+  if (selectedCategories.length === 0) {
+    alert("Оберіть хоча б одну категорію.");
+    return;
+  }
+
+  const category = selectedCategories[0]; // или обработка нескольких позже
+  const queryParams = new URLSearchParams();
+
+  if (selectedGenres.length > 0) {
+    queryParams.set('genre', selectedGenres[0]); // адаптируй под множественный выбор при необходимости
+  }
+
+  if (selectedLanguages.length > 0) {
+    queryParams.set('language', selectedLanguages[0]);
+  }
+
+  if (selectedAuthors.length > 0) {
+    queryParams.set('authors', selectedAuthors.join(','));
+  }
+
+  if (selectedPublishers.length > 0) {
+    queryParams.set('publishers', selectedPublishers.join(','));
+  }
+
+  queryParams.set('price', `${priceRange.min}-${priceRange.max}`);
+
+  try {
+    const response = await axios.get(
+      `http://localhost:8000/books/category/${encodeURIComponent(category)}?${queryParams.toString()}`
+    );
+    const books = response.data.books;
+
+    navigate(`/books/category/${category}?${queryParams.toString()}`, {
+      state: { books }
+    });
+  } catch (error) {
+    console.error('Помилка при отриманні книг:', error);
+  }
+};
+
   
   
   return (

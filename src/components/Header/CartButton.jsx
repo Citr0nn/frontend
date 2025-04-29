@@ -11,7 +11,7 @@ const CartButton = () => {
     username: '',
     lastName: '',
     phoneNumber: '',
-    email: '',
+    Email: '',
     city: '',
     paymentMethod: 'card',
     deliveryMethod: 'Nova Poshta',
@@ -71,19 +71,29 @@ const CartButton = () => {
       quantityOfBooks: cartBooks.length,
     };
     console.log('Данные отправки заказа:', payload);
+  
     try {
       const response = await axios.post('http://localhost:8000/orders/checkout', payload);
-      console.log('Замовлення успішно надіслано:', response.data);
-
-      localStorage.removeItem('cart');
-      setCartBooks([]);
-      setIsOrderFormOpen(false);
-      alert('Дякуємо за замовлення!');
+      console.log('Ответ от сервера:', response.data);
+  
+      const orderId = response.data; // сервер вернул строку
+  
+      if (!orderId) {
+        throw new Error('Сервер не вернул ID заказа');
+      }
+  
+      // Перенаправляем пользователя на оплату
+      window.location.href = `http://localhost:8000/payments/pay/${orderId}`;
+  
+      // (код ниже уже не выполнится после редиректа)
     } catch (error) {
-      console.error('Помилка при надсиланні замовлення:', error);
-      alert('Сталася помилка при надсиланні замовлення. Спробуйте ще раз.');
+      console.error('Помилка при оформленні або оплаті:', error);
+      alert('Сталася помилка. Замовлення не завершено.');
     }
   };
+  
+
+  
 
   return (
     <>
